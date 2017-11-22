@@ -1,2 +1,2 @@
 # gvjinja
-Create directed graph of a jinja environment of templates
+Create directed graphs for templates of jinja environments using Graphviz
