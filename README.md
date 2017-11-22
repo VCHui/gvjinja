@@ -1,4 +1,4 @@
 # gvjinja
 Create directed graphs for templates of jinja environments using Graphviz
 
-(/gvjija/gvjina.png)
+![digraph](https://github.com/VC-H/gvjinja/blob/master/gvjinja.png?raw=true)
