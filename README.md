@@ -3,9 +3,10 @@ Create Graphviz graph files for templates of jinja environments
 
 ## Description
 [`gvjinja.py`](https://github.com/VC-H/gvjinja/blob/master/gvjinja.py)
-has a set of jinja templates to generate to `stdout` the Graphviz graph
-file (the dot-language) for the templates of a jinja environment. Then,
-`dot` of Graphviz creates the graphic output from the graph file.
+has a small set of very simple jinja templates to generate to the
+Graphviz graph file (the dot-language) for the templates of a jinja
+environment. `gvjinja` outputs to `stdout`. `dot` of Graphviz is
+required to create the graphic output from the graph file.
 
 ## Installation requirements
 * [jinja](https://github.com/pallets/jinja)
