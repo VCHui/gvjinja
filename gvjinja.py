@@ -8,7 +8,7 @@ gvjinja
 A jinja module to create Graphviz directed graphs as
 UML diagrams for jinja templates environments.
 
-:copyright: (c) 2017 by Victor Hui <vc-h@users.noreply.github.com>.
+:copyright: (c) 2017 by Victor Hui.
 :licence: BSD, see LICENSE for more details.
 
 """
@@ -18,6 +18,8 @@ import sys
 from jinja2 import meta, Environment, DictLoader
 from jinja2.meta import nodes
 
+__author__ = 'Victor Hui'
+__license__ = 'BSD-3-Clause'
 
 class Symble(object):
     """Symbol table of an abstract syntax tree.
@@ -41,7 +43,7 @@ class Symble(object):
             var = meta.find_undeclared_variables(self.ast)
         except:
             exc_type,exc,traceback = sys.exc_info()
-            print('Symble: find_undeclared_variables ...',file=sys.stderr)
+            print('Symble: find_undeclared_variables ....',file=sys.stderr)
             print('  {}: {}'.format(self.name,exc),file=sys.stderr)
         return list(map('{}: undefined'.format,var))
 
@@ -131,7 +133,7 @@ def getsymbles(jinja_env,extensions=""):
             ast = jinja_env.parse(sourcetuple)
         except:
             exc_type,exc,traceback = sys.exc_info()
-            print('getsymbles: parse ...',file=sys.stderr)
+            print('getsymbles: parse ....',file=sys.stderr)
             print('  {}: {}'.format(name,exc),file=sys.stderr)
             continue
         symbles.append(Symble(ast,name))
@@ -147,10 +149,11 @@ class gvjinja(object):
     * env, a jinja environment of the templates;
 
     :class:`gvjinja` renders a directed graph for itself as a test.
+    The gvjinja templates were designed test itself.
 
     >>> symbles = getsymbles(gvjinja.env)
     >>> assert len(symbles) == len(gvjinja.templates)
-    >>> list(map(repr,symbles)) == [
+    >>> set(map(repr,symbles)) == set([
     ...     "<Symble object for ast 'DIGRAPH'>",
     ...     "<Symble object for ast 'DIGRAPHBASIC'>",
     ...     "<Symble object for ast 'EDGES'>",
@@ -159,7 +162,7 @@ class gvjinja(object):
     ...     "<Symble object for ast 'INCLUDES'>",
     ...     "<Symble object for ast 'NODE'>",
     ...     "<Symble object for ast 'NODELABEL'>",
-    ... ]
+    ... ])
     True
     >>> gvjinja.digraph(gvjinja.env) == gvjinja.digraph(symbles)
     True
@@ -168,18 +171,66 @@ class gvjinja(object):
     True
 
     * :meth:`digraph`(env), classmethod to print UML of env with nodes;
-    * :meth:`digraphbasic`(env), classmethod to print a graph diagram;
+      the diagram has edge labels showing the name of the imported macros;
 
     >>> 'nodelabel as label' in gvjinja.digraph(gvjinja.env)
     True
-    >>> 'nodelabel as label' in gvjinja.digraphbasic(gvjinja.env)
-    False
 
     .. figure:: gvjinja.png
 
        ..
 
        Figure: gvjinja templates directed graph
+
+    * :meth:`digraphbasic`(env), classmethod to print a basic graph diagram;
+      the basic diagram has no detail of the nodes and no edge labels;
+
+    >>> 'nodelabel as label' in gvjinja.digraphbasic(gvjinja.env)
+    False
+
+    .. figure:: gvjinja-basic.png
+
+       ..
+
+       Figure: gvjinja templates basic directed graph
+
+    * exception test cases
+
+      >>> templates = dict(
+      ...     UNDEF = '{{ range(1)|undef }}',
+      ...     LIPSUM = '{{ \lipsum }}')
+      >>> testenv = Environment(loader=DictLoader(templates))
+
+      * setting up redirection of stderr for the test cases:
+
+        >>> from contextlib import contextmanager
+        >>> @contextmanager
+        ... def redirecterr():
+        ...     stderr, sys.stderr = sys.stderr, sys.stdout
+        ...     yield
+        ...     sys.stderr = stderr
+
+      * a case of undefined filter:
+
+        >>> s = getsymbles(testenv,extensions="UNDEF")
+        >>> s
+        [<Symble object for ast 'UNDEF'>]
+        >>> with redirecterr():
+        ...     s[0].undefines
+        Symble: find_undeclared_variables ....
+          UNDEF: no filter named 'undef'
+          File "<introspection>", line 1
+        []
+
+      * a strange case of syntax!
+
+        >>> with redirecterr():
+        ...     s = getsymbles(testenv,extensions="LIPSUM")
+        getsymbles: parse ....
+          LIPSUM: unexpected char u'\\\\' at 5
+        >>> s # parse failed, no symbles!
+        []
+
 
     """
 
@@ -191,40 +242,40 @@ digraph "jinja_env" {
 rankdir = BT
 
 node [
-  shape = "record",
-  fontname = "Courier", color = "#3f0000",
-  style = "filled", fillcolor = "#fffff9",
+  shape = "record", color = "#0f0000",
+  fontname = "Courier",
+  style = "filled", fillcolor = "#fffffc",
 ]
 
 edge [
-  color = "#3f0000",
-  fontname = "Courier", fontcolor = "#006f00",
+  color = "#0f0000",
+  fontname = "Courier", fontcolor = "#007f00",
 ]
 
-{%- block nodes -%}
+{%- block nodes %}
 {% endblock -%}
 
 {%- block edges %}
-  {% for symble in symbles -%}
-    {% include "EDGES" with context %}
-  {% endfor -%}
+{% for symble in symbles -%}
+{% include "EDGES" with context -%}
+{% endfor -%}
 {% endblock %}
 }
 ''',
 
 DIGRAPH = '''\
 {% extends "DIGRAPHBASIC" -%}
-{% set extended = True %}
+{% set extended = True %}{# the extension identfier #}
 
 {%- block nodes %}
-  {% for symble in symbles -%}
-    {% include "NODE" %}
-  {% endfor -%}
-{% endblock -%}
+{% for symble in symbles %}
+{% include "NODE" %}
+{% endfor %}
+{%- endblock %}
 ''',
 
 NODE = '''\
-{% from "NODELABEL" import nodelabel as label %}
+{% from "NODELABEL" import nodelabel as label -%}
 "{{ symble.name }}" [
   URL = "{{ symble.url }}",
   tooltip = "{{ symble.tooltip }}",
@@ -241,8 +292,8 @@ NODELABEL = '''\
 ''',
 
 EDGES = '''\
-{%- include "EXTENDS" -%}
-{%- include "INCLUDES" -%}
+{%- include ["EXTENDS","INCLUDES","IMPORTS"] -%}{#- test include from list -#}
+{%- include ("INCLUDES","IMPORTS") -%}
 {%- include "IMPORTS" -%}
 ''',
 
@@ -282,7 +333,6 @@ IMPORTS = '''\
         return my.env.get_template('DIGRAPHBASIC').render(symbles=symbles)
 
 
-
 if __name__ == '__main__':
 
     import os
@@ -291,23 +341,23 @@ if __name__ == '__main__':
 
     def run():
         """\
-Usage:  {0} [-m [module] [env]] [-b]
+Usage:  gvjinja.py [-m [module] [env]] [-b]
 
 Examples::
 
   # print usage;
-    $ {0}
+    $ gvjinja.py
   # render a digraph of gvjinja itself;
-    $ {0} -m gvjinja gvjinja.env | dot -T png > gvjinja.png
+    $ gvjinja.py -m gvjinja gvjinja.env | dot -T png > gvjinja.png
   # render a basic digraph of gvjinja itself;
-    $ {0} -m gvjinja gvjinja.env -b | dot -T png > gvjinja-basic.png
+    $ gvjinja.py -m gvjinja gvjinja.env -b | dot -T png > gvjinja-basic.png
 
 """
         if (len(sys.argv) == 1 or
             '-h' in sys.argv[1] or
             '-m' != sys.argv[1] or
             len(sys.argv) < 4):
-            print(run.__doc__.format(sys.argv[0]),file=sys.stderr)
+            print(run.__doc__,file=sys.stderr)
             return
 
         env = import_module(sys.argv[2])
