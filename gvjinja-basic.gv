@@ -1,0 +1,24 @@
+digraph "jinja_env" {
+
+rankdir = BT
+
+node [
+  shape = "record", color = "#0f0000",
+  fontname = "Courier",
+  style = "filled", fillcolor = "#fffffc",
+]
+
+edge [
+  color = "#0f0000",
+  fontname = "Courier", fontcolor = "#007f00",
+]
+
+
+"DIGRAPHBASIC" -> "DIGRAPH" [ arrowhead = empty ]
+"NODE" -> "DIGRAPH" [ arrowhead = open ]
+"EDGES" -> "DIGRAPHBASIC" [ arrowhead = open ]
+"IMPORTS" -> "EDGES" [ arrowhead = open ]
+"EXTENDS" -> "EDGES" [ arrowhead = open ]
+"INCLUDES" -> "EDGES" [ arrowhead = open ]
+"NODELABEL" -> "NODE" [ arrowhead = diamond ]
+}

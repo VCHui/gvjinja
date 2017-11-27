@@ -19,7 +19,9 @@ from jinja2 import meta, Environment, DictLoader
 from jinja2.meta import nodes
 
 __author__ = 'Victor Hui'
+__copyright__ = 'Copyright (C) 2017, Victor Hui'
 __license__ = 'BSD-3-Clause'
+__version__ = '0.9b0'
 
 class Symble(object):
     """Symbol table of an abstract syntax tree.
@@ -311,8 +313,8 @@ INCLUDES = '''\
 
 IMPORTS = '''\
 {%- for ref,funcs in symble.imports %}
-"{{ ref }}" -> "{{ symble.name }}" [ arrowhead = diamond {% if extended -%},
-  label = " {{ funcs }} " {%- endif %} ]
+"{{ ref }}" -> "{{ symble.name }}" [ arrowhead = diamond
+  {%- if extended -%}, label = " {{ funcs }} " {%- endif %} ]
 {%- endfor %}
 ''',
 
@@ -343,18 +345,19 @@ if __name__ == '__main__':
         """\
 Usage:  gvjinja.py [-m [module] [env]] [-b]
 
-Examples::
+# print usage;
+$ gvjinja.py
 
-  # print usage;
-    $ gvjinja.py
-  # render a digraph of gvjinja itself;
-    $ gvjinja.py -m gvjinja gvjinja.env | dot -T png > gvjinja.png
-  # render a basic digraph of gvjinja itself;
-    $ gvjinja.py -m gvjinja gvjinja.env -b | dot -T png > gvjinja-basic.png
+# render a digraph of gvjinja itself;
+$ gvjinja.py -m gvjinja gvjinja.env |\\
+        tee gvjinja.gv | dot -T png > gvjinja.png
+
+# render a basic digraph of gvjinja itself;
+$ gvjinja.py -m gvjinja gvjinja.env -b |\\
+        tee gvjinja-basic.gv | dot -T png > gvjinja-basic.png
 
 """
         if (len(sys.argv) == 1 or
-            '-h' in sys.argv[1] or
             '-m' != sys.argv[1] or
             len(sys.argv) < 4):
             print(run.__doc__,file=sys.stderr)
