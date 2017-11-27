@@ -1,0 +1,6 @@
+include README.md
+include LICENSE
+include *.py
+include *.gv
+include *.png
+include Makefile
