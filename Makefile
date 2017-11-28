@@ -22,12 +22,17 @@ coverage:
 	python -m coverage run setup.py && \
 	python -m coverage report --include=gvjinja.py -m
 
-develop:
+setup_install: distclean
+	python setup.py install
+
+setup_install_develop: distclean
 	python setup.py develop
 
-install: distclean
-	python setup.py sdist && \
-	pip install ./dist/gvjinja-$(VERSION).tar.gz
+pip_install_editable: distclean
+	pip install --editable .
+
+pip_install: distclean
+	pip install .
 
 uninstall:
 	pip uninstall gvjinja
