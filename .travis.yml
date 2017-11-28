@@ -27,3 +27,6 @@ script:
   - python -m coverage erase
   - python -m coverage run setup.py
   - python -m coverage report
+
+after_success:
+  coveralls
