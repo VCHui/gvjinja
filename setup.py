@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 "gvjinja - create Graphviz directed graphs for jinja templates"
 
-import sys
+import sys, subprocess
 import doctest
 import unittest
 from setuptools import setup
@@ -14,6 +14,10 @@ assert gvjinja.__copyright__ == 'Copyright (C) 2017, Victor Hui'
 assert gvjinja.__license__ == 'BSD-3-Clause'
 assert gvjinja.__version__
 
+def getversion():
+    describe = subprocess.check_output('git describe --abbrev=1 HEAD'.split())
+    tag,ncommits = describe.strip().split("-")[:2]
+    return tag + '.post' + ncommits
 
 def suite():
     tests = unittest.TestSuite()
@@ -29,7 +33,7 @@ if __name__ == '__main__':
     else:
         setup(
             name = 'gvjinja',
-            version = gvjinja.__version__ + '.post1',
+            version = getversion(),
             description = __doc__,
             long_description = gvjinja.__doc__,
             author = gvjinja.__author__,
