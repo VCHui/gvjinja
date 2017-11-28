@@ -19,7 +19,7 @@ before_install:
   - conda create -q -n testing python=$TRAVIS_PYTHON_VERSION
 
 install:
-  - conda activate testing
+  - source activate testing
   - conda install -q coverage jinja2
   - python setup.py install
 
