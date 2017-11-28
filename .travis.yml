@@ -16,11 +16,13 @@ before_install:
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
+  - pip install -U pip
   - conda create -q -n testing python=$TRAVIS_PYTHON_VERSION
 
 install:
   - source activate testing
   - conda install -q coverage jinja2
+  - pip install coveralls
   - python setup.py install
 
 script:
