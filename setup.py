@@ -16,7 +16,7 @@ assert gvjinja.__version__
 
 def getversion():
     describe = subprocess.check_output('git describe --abbrev=1 HEAD'.split())
-    tag,ncommits = describe.strip().split("-")[:2]
+    tag,ncommits = describe.decode().strip().split("-")[:2]
     return tag + '.post' + ncommits
 
 def suite():

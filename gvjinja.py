@@ -46,7 +46,8 @@ class Symble(object):
         except:
             exc_type,exc,traceback = sys.exc_info()
             print('Symble: find_undeclared_variables ....',file=sys.stderr)
-            print('  {}: {}'.format(self.name,exc),file=sys.stderr)
+            error = '{}, {}'.format(exc_type.__name__,exc.message)
+            print('  {}: {}'.format(self.name,error),file=sys.stderr)
         return list(map('{}: undefined'.format,var))
 
     @property
@@ -136,7 +137,8 @@ def getsymbles(jinja_env,extensions=""):
         except:
             exc_type,exc,traceback = sys.exc_info()
             print('getsymbles: parse ....',file=sys.stderr)
-            print('  {}: {}'.format(name,exc),file=sys.stderr)
+            error = '{}, {}'.format(exc_type.__name__,exc.message)
+            print('  {}: {}'.format(name,error),file=sys.stderr)
             continue
         symbles.append(Symble(ast,name))
     return symbles
@@ -200,7 +202,7 @@ class gvjinja(object):
 
       >>> templates = dict(
       ...     UNDEF = '{{ range(1)|undef }}',
-      ...     LIPSUM = '{{ \lipsum }}')
+      ...     SYNTAX = '{{ }}')
       >>> testenv = Environment(loader=DictLoader(templates))
 
       * setting up redirection of stderr for the test cases:
@@ -220,16 +222,15 @@ class gvjinja(object):
         >>> with redirecterr():
         ...     s[0].undefines
         Symble: find_undeclared_variables ....
-          UNDEF: no filter named 'undef'
-          File "<introspection>", line 1
+          UNDEF: TemplateAssertionError, no filter named 'undef'
         []
 
-      * a strange case of syntax!
+      * syntax error:
 
         >>> with redirecterr():
-        ...     s = getsymbles(testenv,extensions="LIPSUM")
+        ...     s = getsymbles(testenv,extensions="SYNTAX")
         getsymbles: parse ....
-          LIPSUM: unexpected char u'\\\\' at 5
+          SYNTAX: TemplateSyntaxError, Expected an expression, got 'end of print statement'
         >>> s # parse failed, no symbles!
         []
 
