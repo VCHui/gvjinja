@@ -1,4 +1,4 @@
-# gvjinja
+# gvjinja [![Build Status](https://travis-ci.org/VC-H/gvjinja.svg?branch=master)](https://travis-ci.org/VC-H/gvjinja) [![Coverage Status](https://coveralls.io/repos/github/VC-H/gvjinja/badge.svg?branch=master)](https://coveralls.io/github/VC-H/gvjinja?branch=master)
 Create Graphviz graph files for templates of jinja environments
 
 ## Description
