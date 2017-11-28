@@ -14,6 +14,10 @@ run:
 	./gvjinja.py -m gvjinja gvjinja.env -b |\
 		tee gvjinja-basic.gv | dot -T png > gvjinja-basic.png
 
+checktest:
+	python setup.py check
+	python setup.py test
+
 unittest:
 	python -m unittest setup.suite
 
