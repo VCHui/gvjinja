@@ -1,4 +1,4 @@
-# gvjinja [![Build Status](https://travis-ci.org/VC-H/gvjinja.svg?branch=master)](https://travis-ci.org/VC-H/gvjinja) [![Coverage Status](https://coveralls.io/repos/github/VC-H/gvjinja/badge.svg?branch=master)](https://coveralls.io/github/VC-H/gvjinja?branch=master)
+# gvjinja [![Build Status](https://travis-ci.org/VC-H/gvjinja.svg?branch=master)](https://travis-ci.org/VC-H/gvjinja) [![Coverage Status](https://coveralls.io/repos/github/VC-H/gvjinja/badge.svg?branch=master)](https://coveralls.io/github/VC-H/gvjinja?branch=master) [![PyPI](https://img.shields.io/pypi/v/gvjinja.svg)](https://pypi.python.org/pypi/gvjinja) [![PyPI](https://img.shields.io/pypi/status/gvjinja.svg)](https://pypi.python.org/pypi/gvjinja) [![PyPI](https://img.shields.io/pypi/pyversions/gvjinja.svg)](https://pypi.python.org/pypi/gvjinja) [![PyPI](https://img.shields.io/pypi/l/gvjinja.svg)](https://pypi.python.org/pypi/gvjinja)
 Create Graphviz graph files for templates of jinja environments
 
 ## Description
