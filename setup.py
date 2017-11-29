@@ -20,11 +20,11 @@ download_url = url + '/' + gvjinja.__version__ + 'tar.gz'
 
 def getversion():
     "return the pypi version convention of git describe"
-    describe = subprocess.check_output('git describe --abbrev=1 HEAD'.split())
-    tag,ncommit = describe.decode().strip().split("-")[:2]
-    if ncommit == 0:
-        return tag
-    return tag + '.post' + ncommit
+    describes = subprocess.check_output('git describe --abbrev=1 HEAD'.split())
+    describes = describes.decode().strip().split("-")
+    if len(describes) == 1:
+        return describes[0]
+    return '.post'.join(describes[:-1])
 
 
 def suite():
