@@ -1,4 +1,4 @@
-VERSION=$(shell python setup.py --version)
+VERSION	= $(shell python setup.py --version)
 
 all:
 	@echo
@@ -48,3 +48,6 @@ distclean:
 
 clean: distclean
 	\rm -fr *~ *.pyc
+
+sphinx:
+	sphinx-apidoc --maxdepth=1 --full --ext-autodoc -o ./sphinx .
