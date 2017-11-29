@@ -14,12 +14,21 @@ assert gvjinja.__copyright__ == 'Copyright (C) 2017, Victor Hui'
 assert gvjinja.__license__ == 'BSD-3-Clause'
 assert gvjinja.__version__
 
+url = 'https://github.com/vc-h/gvjinja'
+download_url = url + '/' + gvjinja.__version__ + 'tar.gz'
+
+
 def getversion():
+    "return the pypi version convention of git describe"
     describe = subprocess.check_output('git describe --abbrev=1 HEAD'.split())
-    tag,ncommits = describe.decode().strip().split("-")[:2]
-    return tag + '.post' + ncommits
+    tag,ncommit = describe.decode().strip().split("-")[:2]
+    if ncommit == 0:
+        return tag
+    return tag + '.post' + ncommit
+
 
 def suite():
+    "use for setup.test_suite."
     tests = unittest.TestSuite()
     tests.addTest(doctest.DocTestSuite(gvjinja))
     return tests
@@ -39,9 +48,10 @@ if __name__ == '__main__':
             author = gvjinja.__author__,
             author_email = 'vc-h@users.noreply.github.com',
             license = gvjinja.__license__,
-            url = 'https://github.com/vc-h/gvjinja',
+            url = url,
+            download_url = download_url,
             platforms = 'any',
-            install_requires = ['jinja2>2.0'],
+            install_requires = ['jinja2>2.0',],
             test_suite = 'setup.suite',
             py_modules = ['gvjinja',],
             scripts = ['gvjinja.py',],
