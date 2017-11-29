@@ -31,7 +31,7 @@ from jinja2.meta import nodes
 __author__ = 'Victor Hui'
 __copyright__ = 'Copyright (C) 2017, Victor Hui'
 __license__ = 'BSD-3-Clause'
-__version__ = '0.9b0'
+__version__ = '0.9b1'
 
 class Symble(object):
     """Symbol table of an abstract syntax tree.
